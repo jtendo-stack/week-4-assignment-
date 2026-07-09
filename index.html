@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kampala Food Markert</title>
+    <style>
+        :root {
+            --bg: #f4f7fb;
+            --card: #ffffff;
+            --card-border: #e0e7ef;
+            --primary: #2f6cb1;
+            --primary-strong: #1f4e8a;
+            --accent: #ff9f1c;
+            --accent-dark: #e07b00;
+            --text: #21334f;
+            --muted: #637892;
+            --shadow: 0 14px 40px rgba(33, 51, 79, 0.12);
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text);
+            background: linear-gradient(135deg, #e9f3ff 0%, #f9fafc 100%);
+        }
+
+        body > h1 {
+            text-align: center;
+            font-size: 2.6rem;
+            margin: 24px 0 8px;
+            color: var(--primary-strong);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .search-bar {
+            display: flex;
+            justify-content: center;
+            margin: 0 auto 20px;
+            width: min(860px, calc(100% - 32px));
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 14px 18px;
+            border-radius: 999px;
+            border: 1px solid #cbd7ea;
+            background: #f7fbff;
+            color: var(--text);
+            font-size: 1rem;
+            box-shadow: inset 0 1px 4px rgba(33, 51, 79, 0.08);
+            outline: none;
+        }
+
+        .search-bar input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(47, 108, 177, 0.08);
+        }
+
+        .container {
+            width: min(1200px, calc(100% - 32px));
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2.2fr 1fr;
+            gap: 24px;
+            align-items: start;
+            padding-bottom: 40px;
+        }
+
+        .products {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 18px;
+        }
+
+        .catalog-title {
+            margin: 0 0 12px;
+            font-size: 1.65rem;
+            color: var(--primary-strong);
+            grid-column: 1 / -1;
+        }
+
+        .product-card,
+        .cart,
+        .checkout {
+            background: var(--card);
+            border: 1px solid var(--card-border);
+            border-radius: 18px;
+            box-shadow: var(--shadow);
+            padding: 20px;
+        }
+
+        .product-image {
+            width: 100%;
+            height: 160px;
+            border-radius: 16px;
+            object-fit: cover;
+            background: #eff5ff;
+        }
+
+        .product-card {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .product-info {
+            display: grid;
+            gap: 10px;
+        }
+
+        .product-card h3 {
+            margin: 0;
+            color: var(--primary-strong);
+            font-size: 1.25rem;
+        }
+
+        .product-card .price-range {
+            margin: 0;
+            font-size: 0.95rem;
+            color: var(--muted);
+        }
+
+        .product-card label {
+            font-size: 0.95rem;
+            color: var(--muted);
+        }
+
+        .product-card select {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 12px;
+            border: 1px solid #d6dee8;
+            background: #fbfdff;
+            color: var(--text);
+            outline: none;
+        }
+
+        .add-to-cart,
+        .checkout button {
+            border: none;
+            border-radius: 999px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+            box-shadow: 0 12px 22px rgba(47, 108, 177, 0.18);
+            width: fit-content;
+            padding: 12px 20px;
+            color: #fff;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+        }
+
+        .add-to-cart:hover,
+        .checkout button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 16px 26px rgba(47, 108, 177, 0.24);
+            background: linear-gradient(135deg, var(--primary-strong), var(--accent-dark));
+        }
+
+        .cart,
+        .checkout {
+            position: sticky;
+            top: 24px;
+        }
+
+        .cart h2,
+        .checkout h2 {
+            margin-top: 0;
+            color: var(--primary);
+        }
+
+        #cart-items {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 16px;
+        }
+
+        #cart-items li {
+            margin-bottom: 10px;
+            font-size: 0.98rem;
+            color: var(--text);
+            padding: 10px 12px;
+            border-radius: 12px;
+            background: #f5f8ff;
+            border: 1px solid #e4ecf8;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .cart-item-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .remove-item {
+            background: #ff5a5f;
+            border: none;
+            color: white;
+            border-radius: 999px;
+            padding: 6px 12px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: background 0.18s ease;
+        }
+
+        .remove-item:hover {
+            background: #d73d42;
+        }
+
+        .cart h3 {
+            margin: 0;
+            font-size: 1.15rem;
+            color: var(--primary-strong);
+        }
+
+        .checkout label,
+        .checkout select,
+        .checkout input {
+            display: block;
+            width: 100%;
+        }
+
+        .checkout select,
+        .checkout input {
+            padding: 12px 14px;
+            border-radius: 12px;
+            border: 1px solid #d6dee8;
+            background: #fbfdff;
+            margin-bottom: 14px;
+            font-size: 1rem;
+            color: var(--text);
+        }
+
+        .checkout p {
+            font-size: 0.95rem;
+            color: var(--text);
+            margin: 0;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 1000;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            width: 100%;
+            max-width: 420px;
+            background: #fff;
+            border-radius: 24px;
+            padding: 28px 24px;
+            box-shadow: 0 24px 45px rgba(33, 51, 79, 0.18);
+            text-align: center;
+        }
+
+        .modal-content h2 {
+            margin: 0 0 14px;
+            color: var(--primary-strong);
+            font-size: 1.8rem;
+        }
+
+        .modal-content p {
+            margin: 0;
+            color: var(--text);
+            line-height: 1.6;
+            font-size: 1rem;
+        }
+
+        .modal-content button {
+            margin-top: 20px;
+            width: auto;
+            padding: 12px 22px;
+            border-radius: 999px;
+            border: none;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        @media (max-width: 860px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            .cart,
+            .checkout {
+                position: relative;
+                top: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Kampala Food Market</h1>
+    <div class="search-bar">
+        <input id="search-input" type="search" placeholder="Search products, vegetables, rice, milk..." />
+    </div>
+    <div class="container">
+        <div class="products">
+            <div class="product-card">
+                <img class="product-image" src="vegies.jfif" alt="Vegetables" />
+                <div class="product-info">
+                    <h3>Vegetables</h3>
+                    <p class="price-range">Tomatoes 1200 ugx, Green pepper 1500 ugx, Eggplant 900 ugx</p>
+                </div>
+                <label for="vegetables-select">Choose an item:</label>
+                <select id="vegetables-select" class="product-options">
+                    <option value="1200">Tomatoes – 1200 ugx</option>
+                    <option value="1500">Green pepper – 1500 ugx</option>
+                    <option value="900">Eggplant – 900 ugx</option>
+                </select>
+                <button class="add-to-cart" data-name="Vegetables">Add to Cart</button>
+            </div>
+
+            <div class="product-card">
+                <img class="product-image" src="milk.jfif" alt="Milk pack" />
+                <div class="product-info">
+                    <h3>Milk</h3>
+                    <p class="price-range">Fresh full cream milk pack</p>
+                </div>
+                <label for="milk-select">Choose an item:</label>
+                <select id="milk-select" class="product-options">
+                    <option value="6000">Milk pack – 6000 ugx</option>
+                </select>
+                <button class="add-to-cart" data-name="Milk">Add to Cart</button>
+            </div>
+
+             <div class="product-card">
+                <img class="product-image" src="rice.jfif" alt="Rice" />
+                <div class="product-info">
+                    <h3>Rice</h3>
+                    <p class="price-range">1kg 9000 ugx, 1/2kg 4600 ugx, 1/4kg 2500 ugx</p>
+                </div>
+                <label for="rice-select">Choose an item:</label>
+                <select id="rice-select" class="product-options">
+                    <option value="9000">1kg – 9000 ugx</option>
+                    <option value="4600">1/2kg – 4600 ugx</option>
+                    <option value="2500">1/4kg – 2500 ugx</option>
+                </select>
+                <button class="add-to-cart" data-name="Rice">Add to Cart</button>
+            </div>
+
+            <div class="product-card">
+                <img class="product-image" src="sugar.jfif" alt="Sugar" />
+                <div class="product-info">
+                    <h3>Sugar</h3>
+                    <p class="price-range">1kg 7000 ugx, 1/2kg 3600 ugx, 1/4kg 1900 ugx</p>
+                </div>
+                <label for="sugar-select">Choose an item:</label>
+                <select id="sugar-select" class="product-options">
+                    <option value="7000">1kg – 7000 ugx</option>
+                    <option value="3600">1/2kg – 3600 ugx</option>
+                    <option value="1900">1/4kg – 1900 ugx</option>
+                </select>
+                <button class="add-to-cart" data-name="Sugar">Add to Cart</button>
+            </div>
+
+            <div class="product-card">
+                <img class="product-image" src="posho.jfif" alt="Posho" />
+                <div class="product-info">
+                    <h3>Posho</h3>
+                    <p class="price-range">1kg 5000 ugx, 1/2kg 2800 ugx, 1/4kg 1600 ugx</p>
+                </div>
+                <label for="posho-select">Choose an item:</label>
+                <select id="posho-select" class="product-options">
+                    <option value="5000">1kg – 5000 ugx</option>
+                    <option value="2800">1/2kg – 2800 ugx</option>
+                    <option value="1600">1/4kg – 1600 ugx</option>
+                </select>
+                <button class="add-to-cart" data-name="Posho">Add to Cart</button>
+            </div>
+
+             <div class="product-card">
+                <img class="product-image" src="fruits.jfif" alt="Fruits" />
+                <div class="product-info">
+                    <h3>Fruits</h3>
+                    <p class="price-range">Bananas 1200 ugx, Apples 1500 ugx, Oranges 1300 ugx</p>
+                </div>
+                <label for="fruits-select">Choose an item:</label>
+                <select id="fruits-select" class="product-options">
+                    <option value="1200">Bananas – 1200 ugx</option>
+                    <option value="1500">Apples – 1500 ugx</option>
+                    <option value="1300">Oranges – 1300 ugx</option>
+                </select>
+                <button class="add-to-cart" data-name="Fruits">Add to Cart</button>
+            </div>
+
+            <div class="product-card">
+                <img class="product-image" src="fish.jfif" alt="Tilapia fish" />
+                <div class="product-info">
+                    <h3>Fish Tilapia</h3>
+                    <p class="price-range">Fresh Tilapia per kilo</p>
+                </div>
+                <label for="fish-select">Choose an item:</label>
+                <select id="fish-select" class="product-options">
+                    <option value="45000">Tilapia – 45000 ugx</option>
+                </select>
+                <button class="add-to-cart" data-name="Fish Tilapia">Add to Cart</button>
+            </div>
+
+            <div class="product-card">
+                <img class="product-image" src="BREAD.jfif" alt="Bread" />
+                <div class="product-info">
+                    <h3>Bread</h3>
+                    <p class="price-range">Loaf 3500 ugx, Sliced 4500 ugx</p>
+                </div>
+                <label for="bread-select">Choose an item:</label>
+                <select id="bread-select" class="product-options">
+                    <option value="3500">Loaf – 3500 ugx</option>
+                    <option value="4500">Sliced – 4500 ugx</option>
+                </select>
+                <button class="add-to-cart" data-name="Bread">Add to Cart</button>
+            </div>
+
+            <div class="product-card">
+                <img class="product-image" src="eggs.jfif" alt="Eggs" />
+                <div class="product-info">
+                    <h3>Eggs</h3>
+                    <p class="price-range">6 eggs 2500 ugx, 12 eggs 4500 ugx</p>
+                </div>
+                <label for="eggs-select">Choose an item:</label>
+                <select id="eggs-select" class="product-options">
+                    <option value="2500">6 eggs – 2500 ugx</option>
+                    <option value="4500">12 eggs – 4500 ugx</option>
+                </select>
+                <button class="add-to-cart" data-name="Eggs">Add to Cart</button>
+            </div>
+
+    </div>
+
+    <!-- Cart Section -->
+    <div class="cart">
+        <h2>Your Cart</h2>
+        <ul id="cart-items">
+            <!-- Cart items will appear here dynamically -->
+        </ul>
+        <h3>Total: ugx<span id="cart-total">0.00</span></h3>
+    </div>
+
+    <div class="checkout">
+        <h2>Checkout</h2>
+        <label for="payment-method">Mobile Money Payment Method</label>
+        <select id="payment-method">
+            <option value="">Select payment method</option>
+            <option value="MTN Mobile Money">MTN Mobile Money</option>
+            <option value="Airtel Money">Airtel Money</option>
+        </select>
+
+        <label for="phone-number">Phone Number</label>
+        <input id="phone-number" type="tel" placeholder="e.g. 0771234567" />
+
+        <button id="checkout-button">Checkout</button>
+        <p id="checkout-message" style="margin-top:12px; color:#333;"></p>
+    </div>
+</div>
+
+<div id="thankyou-modal" class="modal">
+    <div class="modal-content">
+        <h2>Thank you!</h2>
+        <p id="thankyou-text">We appreciate your order and will process it shortly.</p>
+        <button id="close-modal">Continue Shopping</button>
+    </div>
+</div>
+
+    <script src="shopping chart.js"></script>
+</body>
+</html>
